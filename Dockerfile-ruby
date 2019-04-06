@@ -1,0 +1,22 @@
+FROM ruby:2.5.1
+
+USER root
+
+COPY entry_point.sh /.
+
+RUN chmod 755 /entry_point.sh
+
+RUN useradd -u 1000 -d /mnt ruby
+
+RUN chown ruby:ruby /mnt
+
+RUN apt-get update && apt-get install -y \
+    ruby-bundler \
+    build-essential \
+    --no-install-recommends && rm -r /var/lib/apt/lists/*
+
+USER ruby
+
+WORKDIR /mnt
+
+ENTRYPOINT /entry_point.sh

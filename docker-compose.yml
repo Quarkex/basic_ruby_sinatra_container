@@ -1,0 +1,26 @@
+version: '3'
+services:
+  rb:
+    build:
+      dockerfile: Dockerfile-ruby
+      context: ./
+    restart: always
+    container_name: ${COMPOSE_PROJECT_NAME}
+    expose:
+      - 4567
+    tty: true
+    env_file:
+      - .env
+    environment:
+      - LETSENCRYPT_HOST=${DOMAINS}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - VIRTUAL_HOST=${DOMAINS}
+      - VIRTUAL_PORT=4567
+    volumes:
+        - ./data:/mnt:rw
+    networks:
+      - default
+networks:
+  default:
+    external:
+      name: nginx-proxy
